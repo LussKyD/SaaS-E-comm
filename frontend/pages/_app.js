@@ -1,5 +1,5 @@
-import '../public/styles.css'; // if you have global styles, or change path accordingly
-import '../styles/globals.css'; // common Tailwind path
+// pages/_app.js
+import '../styles/globals.css';  // ✅ Tailwind entry point
 import Head from 'next/head';
 
 export default function MyApp({ Component, pageProps }) {
