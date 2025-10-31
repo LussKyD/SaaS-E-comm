@@ -2,7 +2,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-10 font-sans">
       <header className="flex items-center gap-4 mb-8">
-        <img src="/draco-logo.jpg" alt="Draco" className="w-20 rounded-full shadow-lg" />
+        <img src="draco-logo.jpg" alt="Draco" className="w-20" />
         <h1 className="text-3xl font-bold text-gray-800">
           Draco Dynasty — SaaS Storefront Starter
         </h1>
