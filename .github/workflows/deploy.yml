@@ -1,59 +1,53 @@
 # .github/workflows/deploy.yml
-
-name: Deploy Next.js (Frontend) to GitHub Pages
+name: Deploy Static NextJS to GitHub Pages
 
 on:
-push:
-branches:
-- main
-
-permissions:
-contents: read
-pages: write
-id-token: write
+  push:
+    branches:
+      - main
 
 jobs:
-build:
-runs-on: ubuntu-latest
-defaults:
-run:
-working-directory: frontend  # 👈 ensures all npm commands run inside frontend
+  build:
+    runs-on: ubuntu-latest
 
-```
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: '18'
-      cache: 'npm'
-      cache-dependency-path: frontend/package-lock.json
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-  - name: Install dependencies
-    run: npm ci
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
 
-  - name: Build Next.js app
-    run: npm run build && npm run export
+      - name: Build Next.js app
+        working-directory: ./frontend
+        run: npm run build && npm run export
 
-  - name: Move out build output
-    run: |
-      mv frontend/out ./out 2>/dev/null || true
+      - name: Move out build output
+        run: |
+          mkdir out
+          mv frontend/out/* out/
 
-  - name: Upload production-ready site
-    uses: actions/upload-pages-artifact@v4
-    with:
-      path: out
-```
+      - name: Upload production-ready site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: out
 
-deploy:
-needs: build
-runs-on: ubuntu-latest
-environment:
-name: github-pages
-url: ${{ steps.deployment.outputs.page_url }}
-steps:
-- name: Deploy to GitHub Pages
-id: deployment
-uses: actions/deploy-pages@v4
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
